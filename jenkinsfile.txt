@@ -1,0 +1,42 @@
+pipeline{
+    agent any
+    environment{ 
+        username: 'aj24092003'
+        GitHublink: 'https://github.com/arj24092003/aj123123.git'
+        branch: 'main'
+    }
+    stages{
+        stage('checkout'){
+            checkout=([$class: 'GitSCM', userRemoteConFigs: [[ url: "${GitHublink}", credentialsID: "${username}"]], branches: [[ name="${branch}"]]])
+        }
+        stage('make changes'){
+            steps{
+                script{
+                    writeFile file: file.txt, text: 'jenkins'
+                }
+            } 
+        }
+        stage('commit'){
+            steps{
+                script{
+                    sh 'git config user.name=arj123123'
+                    sh 'git config user.email=arjunjagadish249@gmail.com'
+                    sh 'git add .'
+                    sh 'git commit -m "commit"'
+                    sh 'git push origin ${branch}'
+                }
+            }
+        }
+    }  
+
+    post{
+        successx{
+            echo " success"
+        }
+        failure{
+            echo" failure"
+        }
+    }
+}
+     
+        
